@@ -1,0 +1,9 @@
+.promptInput {
+  caret-shape: block;
+  caret-animation: manual;
+  caret-color: white;
+  border: none;
+  background: transparent;
+  width: 100%;
+  outline: none;
+}
