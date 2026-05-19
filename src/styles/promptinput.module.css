@@ -1,5 +1,5 @@
 .promptInput {
-  width: 100%;
+  width: calc(100% - 30px);
   border: none;
   background: transparent;
   margin-left: 30px;
@@ -8,4 +8,11 @@
   caret-shape: block;
   caret-animation: manual;
   caret-color: white;
+}
+
+.promptButton {
+  font-size: 0px;
+  border: none;
+  box-shadow: none;
+  background: none;
 }

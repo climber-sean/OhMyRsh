@@ -14,7 +14,7 @@ export const PromptInput = forwardRef<HTMLInputElement, PromptInputProps>((props
   return (
     <form onSubmit={(e) => onSubmit(e)}>
       <input type="text" name="terminal-prompt" ref={ref} autoComplete="off" className={styles.promptInput} />
-      <button type="submit">Submit</button>
+      <button className={styles.promptButton} style={{ display: 'block' }} type="submit">Submit</button>
     </form>
   )
 });

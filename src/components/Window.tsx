@@ -15,22 +15,24 @@ export const Window = () => {
 
   const handlePromptSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(inputRef.current?.value);
-    setPrompts((prev) => [...prev, inputRef.current?.value as string]);
-    console.log(prompts);
-    console.log(containerRef);
+    setPrompts((prev) => [...prev, inputRef.current?.value as string]);  
   }
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.value = '';
     }
+
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      console.log(typeof containerRef.current.scrollTop);
+    }
   }, [prompts])
 
   return (
     <div className={styles.window} onClick={handleClick} >
       <TerminalHeader />
-      <div ref={containerRef} style={{ padding: '10px' }}>
+      <div ref={containerRef} className={styles.promptContainer}>
         {prompts.map((value: string, i: number) => (
           <div key={i}>
             <PromptHeader />
