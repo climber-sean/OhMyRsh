@@ -36,7 +36,7 @@ export const Window = () => {
         {prompts.map((value: string, i: number) => (
           <div key={i}>
             <PromptHeader />
-            <div>{value}</div>
+            <div style={{ color: 'white', padding: '0 0 10px', marginLeft: '30px' }}>{value}</div>
           </div>
         ))}
         <div>
