@@ -2,6 +2,7 @@ import { useRef } from "react";
 import styles from "../styles/window.module.css"
 import { PromptInput } from "./PromptInput"
 import { TerminalHeader } from "./TerminalHeader"
+import { PromptHeader } from "./PromptHeader";
 
 export const Window = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -13,7 +14,10 @@ export const Window = () => {
   return (
     <div className={styles.window} onClick={handleClick} >
       <TerminalHeader />
-      <PromptInput ref={inputRef} />
+      <div style={{ padding: '10px' }}>
+        <PromptHeader />
+        <PromptInput ref={inputRef} />
+      </div>
     </div>
   )
 }
