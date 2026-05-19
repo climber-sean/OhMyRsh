@@ -3,4 +3,18 @@
   width: 750px;
   height: 500px;
   border-radius: 25px;
-} 
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.promptContainer {
+  padding: 10px;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.promptContainer::-webkit-scrollbar {
+  display: none;
+}
