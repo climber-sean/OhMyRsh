@@ -4,8 +4,22 @@ import { PromptInput } from "./PromptInput"
 import { TerminalHeader } from "./TerminalHeader"
 import { PromptHeader } from "./PromptHeader";
 
+type TerminalOutput = {
+  output?: string,
+  command: string,
+}
+
+type TerminalCommand = {
+  helpMessage: string,
+  commandFunc: (arg: string) => string | void
+}
+
+type TerminalCommands = {
+  [key:string]: TerminalCommand
+}
+
 export const Window = () => {
-  const [prompts, setPrompts] = useState<string[]>([])
+  const [prompts, setPrompts] = useState<TerminalOutput[]>([])
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -15,13 +29,27 @@ export const Window = () => {
 
   const handlePromptSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPrompts((prev) => [...prev, inputRef.current?.value as string]);
-    if (inputRef.current && commands[inputRef.current?.value]) {
-        commands[inputRef.current.value].commandFunc();
-    } 
+    const commandInput = inputRef.current?.value.split(' ')[0] || '';
+    console.log(commandInput);
+    console.log(inputRef.current?.value);
+    const output: TerminalOutput = {
+      command: '',
+    }
+    if (inputRef.current && commands[commandInput]) {
+        setPrompts((prev) => [...prev, output]);
+        const returnedOutput = commands[commandInput].commandFunc(inputRef.current.value);
+        if (returnedOutput) {
+          output.output = returnedOutput
+        }
+        output.command = inputRef.current.value
+    } else if (inputRef.current) {
+      output.command = inputRef.current.value;
+      output.output = `rsh: command not found: ${inputRef.current.value}`;
+      setPrompts((prev) => [...prev, output])
+    }
   }
 
-  const commands: Record<string, any> = {
+  const commands: TerminalCommands = {
     "clear": {
       helpMessage: "the clear command will empty your terminal screen, removing all previous output",
       commandFunc: () => {
@@ -31,7 +59,16 @@ export const Window = () => {
     "greet": {
       helpMessage: "the greet command provides you with a nice friendly message",
       commandFunc: () => {
-        setPrompts((prev) => [...prev, "Hello from OhMyRsh!"]);
+        return "Hello from OhMyRsh!";
+      }
+    },
+    "echo": {
+      helpMessage: "The echo command allows you to print text to the terminal screen",
+      commandFunc: (arg: string) => {
+        const command = arg.split(' ');
+        command.shift();
+        console.log(command);
+        return command.join(' ');
       }
     }
   }
@@ -51,10 +88,13 @@ export const Window = () => {
     <div className={styles.window} onClick={handleClick} >
       <TerminalHeader />
       <div ref={containerRef} className={styles.promptContainer}>
-        {prompts.map((value: string, i: number) => (
+        {prompts.map((value: TerminalOutput, i: number) => (
           <div key={i}>
             <PromptHeader />
-            <div style={{ color: 'white', padding: '0 0 10px', marginLeft: '30px' }}>{value}</div>
+            <div style={{ color: 'white', padding: '0 0 10px', marginLeft: '30px' }}>{value.command}</div>
+            {value.output && (
+              <div style={{ color: 'white' }}>{value.output}</div> 
+            )}
           </div>
         ))}
         <div>
