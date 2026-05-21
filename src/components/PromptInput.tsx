@@ -1,8 +1,8 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 import styles from '../styles/promptinput.module.css';
 
 type PromptInputProps = {
-  onPromptSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
+  onPromptSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void
 }
 
 export const PromptInput = forwardRef<HTMLInputElement, PromptInputProps>((props, ref) => {

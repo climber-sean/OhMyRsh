@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, createContext } from "react";
 import styles from "../styles/window.module.css";
 import { PromptInput } from "./PromptInput";
 import { TerminalHeader } from "./TerminalHeader";
@@ -15,6 +15,8 @@ type TerminalProps = {
   terminalCommands: TerminalCommandConfig[]
 }
 
+export const ThemeContext = createContext<any>(null);
+
 export const Terminal = ({ terminalCommands }: TerminalProps) => {
   const { prompts, handlePromptSubmit: promptSubmit } = useTerminal(terminalCommands);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,7 +24,7 @@ export const Terminal = ({ terminalCommands }: TerminalProps) => {
 
   const handleClick = () => {
     inputRef.current?.focus();
-  };
+  }
 
   const handlePromptSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,6 +44,9 @@ export const Terminal = ({ terminalCommands }: TerminalProps) => {
   }, [prompts])
 
   return (
+    <ThemeContext value={{
+      terminalBackground: '#1e1e1e'
+    }}>
     <div className={styles.window} onClick={handleClick} >
       <TerminalHeader />
       <div ref={containerRef} className={styles.promptContainer}>
@@ -60,5 +65,6 @@ export const Terminal = ({ terminalCommands }: TerminalProps) => {
         </div>
       </div>
     </div>
+    </ThemeContext>
   )
 }
