@@ -1,17 +1,28 @@
 {
   "name": "ohmyrsh",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "OhMyRsh - A terminal component for react",
+  "author": "climber-sean <Sean Butlin>",
+  "license": "MIT",
   "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --config vite.lib.config.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -25,6 +36,8 @@
     "globals": "^17.6.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   }
 }

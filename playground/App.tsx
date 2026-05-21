@@ -1,5 +1,5 @@
-import { Terminal } from "./components/Terminal"
-import type { TerminalCommandConfig } from "./types/terminalcommand.type"
+import { Terminal } from "../src/components/Terminal"
+import type { TerminalCommandConfig } from "../src/types/terminalcommand.type"
 
 const terminalCommands: TerminalCommandConfig[] = [
   {
