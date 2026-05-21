@@ -20,11 +20,8 @@ import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalco
     {
       name: "echo",
       helpMessage: "The echo command allows you to print text to the terminal screen",
-      commandFunc: (arg: string) => {
-        const command = arg.split(' ');
-        command.shift();
-        console.log(command);
-        return command.join(' ');
+      commandFunc: (_cmd, args) => {
+        return args.join(' ');
       }
     }]
 
@@ -45,18 +42,23 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
 
   const handlePromptSubmit = (command: string) => {
     const commandInput = command.split(' ')[0] || '';
+    const commandArgs = command.split(' ');
+    commandArgs.shift();
+
+    console.log(commandArgs);
+    
     const output: TerminalOutput = {
       command: '',
     }
     if (commands[commandInput]) {
       setPrompts((prev) => [...prev, output]);
-      const returnedOutput = commands[commandInput].commandFunc(commandInput, setPrompts);
+      const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, setPrompts);
       if (returnedOutput) {
         output.output = returnedOutput
       }
-      output.command = commandInput;
+      output.command = command;
     } else {
-      output.command = commandInput;
+      output.command = command;
       output.output = `rsh: command not found: ${commandInput}`;
       setPrompts((prev) => [...prev, output])
     }
