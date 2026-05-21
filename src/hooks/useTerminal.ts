@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
 import type { TerminalOutput } from "../types/terminaloutput.type.ts";
-import type { TerminalCommand } from "../types/terminalcommand.type.ts";
+import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalcommand.type.ts";
 
-  const defaultCommands: TerminalCommand[] = [
+  const defaultCommands: TerminalCommandConfig[] = [
     {
       name: "clear",
       helpMessage: "the clear command will empty your terminal screen, removing all previous output",
-      commandFunc: (_arg: string, setPrompts: (prompts: string[]) => void) => {
+      commandFunc: (_cmd, _args, setPrompts) => {
         setPrompts([]);
       }
     },
@@ -30,7 +30,7 @@ import type { TerminalCommand } from "../types/terminalcommand.type.ts";
 
 
 
-export const useTerminal = (terminalCommands: TerminalCommand[]) => {
+export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
   const [prompts, setPrompts] = useState<TerminalOutput[]>([]);
 
   const commands: Record<string, any> = useMemo(() =>
@@ -41,7 +41,7 @@ export const useTerminal = (terminalCommands: TerminalCommand[]) => {
       }
 
       return acc
-    }, {} as Record<string, any>), [terminalCommands]);
+    }, {} as TerminalCommand), [terminalCommands]);
 
   const handlePromptSubmit = (command: string) => {
     const commandInput = command.split(' ')[0] || '';

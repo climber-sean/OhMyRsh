@@ -1,7 +1,7 @@
 import { Terminal } from "./components/Terminal"
-import type { TerminalCommand } from "./types/terminalcommand.type"
+import type { TerminalCommandConfig } from "./types/terminalcommand.type"
 
-const terminalCommands: TerminalCommand[] = [
+const terminalCommands: TerminalCommandConfig[] = [
   {
     name: 'greetTwo',
     helpMessage: 'the greet command returns a friendly message to your terminal screen',

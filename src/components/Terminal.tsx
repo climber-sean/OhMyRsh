@@ -4,7 +4,7 @@ import { PromptInput } from "./PromptInput";
 import { TerminalHeader } from "./TerminalHeader";
 import { PromptHeader } from "./PromptHeader";
 import { useTerminal } from "../hooks/useTerminal";
-import type { TerminalCommand } from "../types/terminalcommand.type.ts";
+import type { TerminalCommandConfig } from "../types/terminalcommand.type.ts";
 
 type TerminalOutput = {
   output?: string,
@@ -12,7 +12,7 @@ type TerminalOutput = {
 }
 
 type TerminalProps = {
-  terminalCommands: TerminalCommand[]
+  terminalCommands: TerminalCommandConfig[]
 }
 
 export const Terminal = ({ terminalCommands }: TerminalProps) => {
