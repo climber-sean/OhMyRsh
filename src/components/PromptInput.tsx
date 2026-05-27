@@ -13,7 +13,7 @@ export const PromptInput = forwardRef<HTMLInputElement, PromptInputProps>((props
 
   return (
     <form onSubmit={(e) => onSubmit(e)}>
-      <input type="text" name="terminal-prompt" ref={ref} autoComplete="off" className={styles.promptInput} />
+      <input type="text" name="terminal-prompt" ref={ref} autoComplete="off" className={styles.promptInput} style={{ fontFamily: 'Noto Mono', fontSize: '14px' }} />
       <button className={styles.promptButton} style={{ display: 'block' }} type="submit">Submit</button>
     </form>
   )

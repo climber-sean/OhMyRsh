@@ -6,6 +6,7 @@ import { PromptHeader } from "./PromptHeader";
 import { useTerminal } from "../hooks/useTerminal";
 import type { TerminalCommandConfig } from "../types/terminalcommand.type.ts";
 import { themes } from "../themes/index";
+import "@fontsource/noto-mono";
 
 type TerminalOutput = {
   output?: string,
@@ -48,15 +49,15 @@ export const Terminal = ({ terminalCommands }: TerminalProps) => {
     <ThemeContext value={{
       theme: themes.catppuccin
     }}>
-    <div className={styles.window} onClick={handleClick} >
+    <div className={styles.window} style={{ fontFamily: 'Noto Mono', fontSize: '14px' }} onClick={handleClick} >
       <TerminalHeader />
-      <div ref={containerRef} className={styles.promptContainer}>
+      <div ref={containerRef} className={styles.promptContainer} style={{ background: themes.catppuccin.terminalBackground, height: '100%' }}>
         {prompts.map((value: TerminalOutput, i: number) => (
           <div key={i}>
             <PromptHeader />
-            <div style={{ color: 'white', padding: '0 0 10px', marginLeft: '30px' }}>{value.command}</div>
+            <div style={{ color: themes.catppuccin.promptText, padding: '0 0 10px', marginLeft: '30px' }}>{value.command}</div>
             {value.output && (
-              <div style={{ color: 'white' }}>{value.output}</div> 
+              <div style={{ color: themes.catppuccin.promptText }}>{value.output}</div> 
             )}
           </div>
         ))}
