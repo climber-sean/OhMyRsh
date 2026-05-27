@@ -5,6 +5,7 @@ import { TerminalHeader } from "./TerminalHeader";
 import { PromptHeader } from "./PromptHeader";
 import { useTerminal } from "../hooks/useTerminal";
 import type { TerminalCommandConfig } from "../types/terminalcommand.type.ts";
+import { themes } from "../themes/index";
 
 type TerminalOutput = {
   output?: string,
@@ -45,7 +46,7 @@ export const Terminal = ({ terminalCommands }: TerminalProps) => {
 
   return (
     <ThemeContext value={{
-      terminalBackground: '#1e1e1e'
+      theme: themes.catppuccin
     }}>
     <div className={styles.window} onClick={handleClick} >
       <TerminalHeader />
