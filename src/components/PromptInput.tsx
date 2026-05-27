@@ -1,8 +1,8 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 import styles from '../styles/promptinput.module.css';
 
 type PromptInputProps = {
-  onPromptSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
+  onPromptSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void
 }
 
 export const PromptInput = forwardRef<HTMLInputElement, PromptInputProps>((props, ref) => {
@@ -13,7 +13,7 @@ export const PromptInput = forwardRef<HTMLInputElement, PromptInputProps>((props
 
   return (
     <form onSubmit={(e) => onSubmit(e)}>
-      <input type="text" name="terminal-prompt" ref={ref} autoComplete="off" className={styles.promptInput} />
+      <input type="text" name="terminal-prompt" ref={ref} autoComplete="off" className={styles.promptInput} style={{ fontFamily: 'Noto Mono', fontSize: '14px', marginTop: '3px' }} />
       <button className={styles.promptButton} style={{ display: 'block' }} type="submit">Submit</button>
     </form>
   )

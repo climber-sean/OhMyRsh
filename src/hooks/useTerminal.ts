@@ -38,29 +38,28 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
       }
 
       return acc
-    }, {} as TerminalCommand), [terminalCommands]);
+    }, {} as TerminalCommand), [terminalCommands])
 
   const handlePromptSubmit = (command: string) => {
     const commandInput = command.split(' ')[0] || '';
     const commandArgs = command.split(' ');
     commandArgs.shift();
-
-    console.log(commandArgs);
     
     const output: TerminalOutput = {
       command: '',
     }
+
     if (commands[commandInput]) {
       setPrompts((prev) => [...prev, output]);
       const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, setPrompts);
       if (returnedOutput) {
-        output.output = returnedOutput
+        output.output = returnedOutput;
       }
       output.command = command;
     } else {
       output.command = command;
       output.output = `rsh: command not found: ${commandInput}`;
-      setPrompts((prev) => [...prev, output])
+      setPrompts((prev) => [...prev, output]);
     }
 
   }
