@@ -45,18 +45,29 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
     const commandInput = command.split(' ')[0] || '';
     const commandArgs = command.split(' ');
     commandArgs.shift();
-    
+
     const output: TerminalOutput = {
       command: '',
     }
 
     if (commands[commandInput]) {
-      setPrompts((prev) => [...prev, output]);
-      const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, setPrompts);
-      if (returnedOutput) {
-        output.output = returnedOutput;
+      let selfSetsPrompts = false
+
+      const selfSetPrompts = (val: TerminalOutput[]) => {
+        selfSetsPrompts = true;
+        setPrompts(val);
       }
-      output.command = command;
+
+      const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, selfSetPrompts);
+
+      if (!selfSetsPrompts) {
+        if (returnedOutput) {
+          output.output = returnedOutput;
+        }
+        output.command = command;
+        setPrompts((prev) => [...prev, output]);
+      }
+
       setPromptHistory((prev) => [...prev, command])
     } else {
       output.command = command;
