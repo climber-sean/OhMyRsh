@@ -23,7 +23,7 @@ type TerminalProps = {
 export const ThemeContext = createContext<any>(null);
 
 export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
-  const { prompts, handlePromptSubmit: promptSubmit } = useTerminal(terminalCommands);
+  const { prompts, promptHistory, handlePromptSubmit: promptSubmit } = useTerminal(terminalCommands);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -47,35 +47,36 @@ export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
 
   //TODO: look at tidying the flow and conditionals up
   const handleHistory = (e: KeyboardEvent) => {
-    if (e.key === "ArrowUp" && prompts.length) {
+    if (e.key === "ArrowUp" && promptHistory.length) {
       if (currentHistoryPosition.current === null) {
-        currentHistoryPosition.current = prompts.length;
+        currentHistoryPosition.current = promptHistory.length;
       } else {
         currentHistoryPosition.current = currentHistoryPosition.current - 1;
       }
-    } else if (e.key === "ArrowDown" && prompts.length) {
+    } else if (e.key === "ArrowDown" && promptHistory.length) {
       if (currentHistoryPosition.current === null) return;
 
       currentHistoryPosition.current = currentHistoryPosition.current + 1;
     }
 
-    if (!currentHistoryPosition.current) currentHistoryPosition.current = null;
-    if (currentHistoryPosition.current && currentHistoryPosition.current > prompts.length) {
+    if (!currentHistoryPosition.current || currentHistoryPosition.current < 0) currentHistoryPosition.current = 0;
+
+    if (currentHistoryPosition.current && currentHistoryPosition.current > promptHistory.length) {
       currentHistoryPosition.current = null;
       if (inputRef.current) inputRef.current.value = '';
       return;
     }
 
     if (inputRef.current && currentHistoryPosition.current) {
-      console.log('fired');
-      inputRef.current.value = prompts[currentHistoryPosition.current - 1].command;
-      const length = prompts[currentHistoryPosition.current - 1].command.length;
+      inputRef.current.value = promptHistory[currentHistoryPosition.current - 1];
+      const length = promptHistory[currentHistoryPosition.current - 1].length;
       requestAnimationFrame(() => {
         inputRef.current?.setSelectionRange(length, length);
       })
     }
-    console.log(currentHistoryPosition);
   }
+
+  console.log(prompts);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -87,8 +88,7 @@ export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      const result = handleHistory(e);
-      console.log(result);
+      handleHistory(e);
     }
 
     window.addEventListener("keydown", handleKeyDown);

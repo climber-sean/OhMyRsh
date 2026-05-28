@@ -29,6 +29,7 @@ import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalco
 
 export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
   const [prompts, setPrompts] = useState<TerminalOutput[]>([]);
+  const [promptHistory, setPromptHistory] = useState<string[]>([]);
 
   const commands: Record<string, any> = useMemo(() =>
     [...defaultCommands, ...terminalCommands].reduce((acc, command) => {
@@ -50,19 +51,20 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
     }
 
     if (commands[commandInput]) {
-      setPrompts((prev) => [...prev, output]);
       const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, setPrompts);
       if (returnedOutput) {
         output.output = returnedOutput;
       }
       output.command = command;
+      setPrompts((prev) => [...prev, output]);
+      setPromptHistory((prev) => [...prev, command])
     } else {
       output.command = command;
       output.output = `rsh: command not found: ${commandInput}`;
       setPrompts((prev) => [...prev, output]);
+      setPromptHistory((prev) => [...prev, command])
     }
-
   }
 
-  return { commands, prompts, handlePromptSubmit }
+  return { commands, prompts, handlePromptSubmit, promptHistory }
 }
