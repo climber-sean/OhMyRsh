@@ -51,12 +51,12 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
     }
 
     if (commands[commandInput]) {
+      setPrompts((prev) => [...prev, output]);
       const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, setPrompts);
       if (returnedOutput) {
         output.output = returnedOutput;
       }
       output.command = command;
-      setPrompts((prev) => [...prev, output]);
       setPromptHistory((prev) => [...prev, command])
     } else {
       output.command = command;
