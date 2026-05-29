@@ -1,4 +1,4 @@
-import { useRef, useEffect, createContext } from "react";
+import { useRef, useEffect, createContext, useCallback } from "react";
 import { PromptInput } from "./PromptInput";
 import { TerminalHeader } from "./TerminalHeader";
 import { PromptHeader } from "./PromptHeader";
@@ -45,38 +45,41 @@ export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
 
   const currentHistoryPosition = useRef<number | null>(null);
 
-  //TODO: look at tidying the flow and conditionals up
   const handleHistory = (e: KeyboardEvent) => {
     if (e.key === "ArrowUp" && promptHistory.length) {
+      e.preventDefault();
       if (currentHistoryPosition.current === null) {
         currentHistoryPosition.current = promptHistory.length;
       } else {
-        currentHistoryPosition.current = currentHistoryPosition.current - 1;
+        currentHistoryPosition.current = Math.max(0, currentHistoryPosition.current - 1);
+      }
+
+      if (inputRef.current) {
+        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
+        const length = inputRef.current.value.length;
+        inputRef.current.selectionStart = length;
+        inputRef.current.selectionEnd = length;
       }
     } else if (e.key === "ArrowDown" && promptHistory.length) {
+      e.preventDefault();
       if (currentHistoryPosition.current === null) return;
 
       currentHistoryPosition.current = currentHistoryPosition.current + 1;
-    }
 
-    if (!currentHistoryPosition.current || currentHistoryPosition.current < 0) currentHistoryPosition.current = 0;
+      if (currentHistoryPosition.current > promptHistory.length) {
+        currentHistoryPosition.current = null;
+        if (inputRef.current) inputRef.current.value = '';
+        return;
+      }
 
-    if (currentHistoryPosition.current && currentHistoryPosition.current > promptHistory.length) {
-      currentHistoryPosition.current = null;
-      if (inputRef.current) inputRef.current.value = '';
-      return;
-    }
-
-    if (inputRef.current && currentHistoryPosition.current) {
-      inputRef.current.value = promptHistory[currentHistoryPosition.current - 1];
-      const length = promptHistory[currentHistoryPosition.current - 1].length;
-      requestAnimationFrame(() => {
-        inputRef.current?.setSelectionRange(length, length);
-      })
+      if (inputRef.current) {
+        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
+        const length = inputRef.current.value.length;
+        inputRef.current.selectionStart = length;
+        inputRef.current.selectionEnd = length;
+      }
     }
   }
-
-  console.log(prompts);
 
   useEffect(() => {
     if (inputRef.current) {
