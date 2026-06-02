@@ -6,8 +6,6 @@ import { ThemeContext } from "./Terminal.tsx";
 export const PromptHeader = () => {
   const { theme } = useContext(ThemeContext);
 
-  console.log(theme);
-
   return (
     <div>
       <span className={styles.promptHeaderLeft} style={{ background: theme.promptIconBackground, color: theme.promptFilePathColor }}>git</span>
