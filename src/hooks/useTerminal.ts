@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import type { TerminalOutput } from "../types/terminaloutput.type.ts";
 import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalcommand.type.ts";
 
@@ -27,7 +27,7 @@ import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalco
 
 
 
-export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
+export const useTerminal = (terminalCommands: TerminalCommandConfig[], inputRef: React.RefObject<HTMLInputElement | null>) => {
   const [prompts, setPrompts] = useState<TerminalOutput[]>([]);
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
 
@@ -41,7 +41,7 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
       return acc
     }, {} as TerminalCommand), [terminalCommands])
 
-  const handlePromptSubmit = (command: string) => {
+  const handlePrompt = (command: string) => {
     const commandInput = command.split(' ')[0] || '';
     const commandArgs = command.split(' ');
     commandArgs.shift();
@@ -77,5 +77,62 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
     }
   }
 
-  return { commands, prompts, handlePromptSubmit, promptHistory }
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleClick = () => {
+    inputRef.current?.focus();
+  }
+
+  const handlePromptSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputRef.current && containerRef.current) {
+      handlePrompt(inputRef.current.value);
+      currentHistoryPosition.current = null;
+      inputRef.current.value = '';
+      requestAnimationFrame(() => {
+        if (containerRef.current) containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      })
+    }
+  }
+
+  const currentHistoryPosition = useRef<number | null>(null);
+
+  const handleHistory = (e: KeyboardEvent) => {
+    if (e.key === "ArrowUp" && promptHistory.length) {
+      e.preventDefault();
+      if (currentHistoryPosition.current === null) {
+        currentHistoryPosition.current = promptHistory.length;
+      } else {
+        currentHistoryPosition.current = Math.max(0, currentHistoryPosition.current - 1);
+      }
+
+      if (inputRef.current) {
+        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
+        const length = inputRef.current.value.length;
+        inputRef.current.selectionStart = length;
+        inputRef.current.selectionEnd = length;
+      }
+    } else if (e.key === "ArrowDown" && promptHistory.length) {
+      e.preventDefault();
+      if (currentHistoryPosition.current === null) return;
+
+      currentHistoryPosition.current = currentHistoryPosition.current + 1;
+
+      if (currentHistoryPosition.current > promptHistory.length) {
+        currentHistoryPosition.current = null;
+        if (inputRef.current) inputRef.current.value = '';
+        return;
+      }
+
+      if (inputRef.current) {
+        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
+        const length = inputRef.current.value.length;
+        inputRef.current.selectionStart = length;
+        inputRef.current.selectionEnd = length;
+      }
+    }
+  }
+
+
+  return { commands, prompts, handlePromptSubmit, promptHistory, handleHistory, handleClick, containerRef }
 }

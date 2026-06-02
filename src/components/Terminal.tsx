@@ -1,4 +1,4 @@
-import { useRef, useEffect, createContext, useCallback } from "react";
+import { useRef, useEffect, createContext } from "react";
 import { PromptInput } from "./PromptInput";
 import { TerminalHeader } from "./TerminalHeader";
 import { PromptHeader } from "./PromptHeader";
@@ -23,69 +23,17 @@ type TerminalProps = {
 export const ThemeContext = createContext<any>(null);
 
 export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
-  const { prompts, promptHistory, handlePromptSubmit: promptSubmit } = useTerminal(terminalCommands);
   const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    prompts,
+    containerRef,
+    handlePromptSubmit,
+    handleHistory,
+    handleClick
+  } = useTerminal(terminalCommands, inputRef);
 
-  const handleClick = () => {
-    inputRef.current?.focus();
-  }
-
-  const handlePromptSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (inputRef.current) {
-      promptSubmit(inputRef.current.value);
-      currentHistoryPosition.current = null;
-    }
-  }
-
-  const currentHistoryPosition = useRef<number | null>(null);
-
-  const handleHistory = (e: KeyboardEvent) => {
-    if (e.key === "ArrowUp" && promptHistory.length) {
-      e.preventDefault();
-      if (currentHistoryPosition.current === null) {
-        currentHistoryPosition.current = promptHistory.length;
-      } else {
-        currentHistoryPosition.current = Math.max(0, currentHistoryPosition.current - 1);
-      }
-
-      if (inputRef.current) {
-        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
-        const length = inputRef.current.value.length;
-        inputRef.current.selectionStart = length;
-        inputRef.current.selectionEnd = length;
-      }
-    } else if (e.key === "ArrowDown" && promptHistory.length) {
-      e.preventDefault();
-      if (currentHistoryPosition.current === null) return;
-
-      currentHistoryPosition.current = currentHistoryPosition.current + 1;
-
-      if (currentHistoryPosition.current > promptHistory.length) {
-        currentHistoryPosition.current = null;
-        if (inputRef.current) inputRef.current.value = '';
-        return;
-      }
-
-      if (inputRef.current) {
-        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
-        const length = inputRef.current.value.length;
-        inputRef.current.selectionStart = length;
-        inputRef.current.selectionEnd = length;
-      }
-    }
-  }
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.value = '';
-    }
-
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
-
     const handleKeyDown = (e: KeyboardEvent) => {
       handleHistory(e);
     }
