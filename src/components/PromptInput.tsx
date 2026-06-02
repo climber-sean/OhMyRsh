@@ -3,7 +3,6 @@ import styles from '../styles/promptinput.module.css';
 
 type PromptInputProps = {
   onPromptSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void,
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
   value: string
 }
 
@@ -20,7 +19,6 @@ export const PromptInput = forwardRef<HTMLInputElement, PromptInputProps>((props
         name="terminal-prompt"
         ref={ref}
         defaultValue={props.value}
-        onChange={(e) => props.onChange(e)}
         autoComplete="off"
         className={styles.promptInput}
         style={{ fontFamily: 'Noto Mono', fontSize: '14px', marginTop: '3px' }}

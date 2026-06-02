@@ -39,10 +39,6 @@ export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
     }
   }
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (inputRef.current) inputRef.current.value = e.target.value
-  }
-
   const currentHistoryPosition = useRef<number | null>(null);
 
   const handleHistory = (e: KeyboardEvent) => {
@@ -117,7 +113,7 @@ export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
         ))}
         <div>
           <PromptHeader />
-          <PromptInput ref={inputRef} onPromptSubmit={handlePromptSubmit} onChange={handleOnChange} value={inputRef.current?.value || ''} />
+          <PromptInput ref={inputRef} onPromptSubmit={handlePromptSubmit} value={inputRef.current?.value || ''} />
         </div>
       </div>
     </div>
