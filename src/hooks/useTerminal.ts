@@ -27,20 +27,22 @@ import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalco
 
 
 
-export const useTerminal = (terminalCommands: TerminalCommandConfig[], inputRef: React.RefObject<HTMLInputElement | null>) => {
+export const useTerminal = (terminalCommands: TerminalCommandConfig[] = []) => {
   const [prompts, setPrompts] = useState<TerminalOutput[]>([]);
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  let commands: Record<string, any> = {};
 
-  const commands: Record<string, any> = useMemo(() =>
+  commands = useMemo(() =>
     [...defaultCommands, ...terminalCommands].reduce((acc, command) => {
       acc[command.name] = {
         helpMessage: command.helpMessage,
         commandFunc: command.commandFunc,
       }
 
-      return acc
-    }, {} as TerminalCommand), [terminalCommands])
-
+    return acc
+  }, {} as TerminalCommand), [terminalCommands])
+ 
   const handlePrompt = (command: string) => {
     const commandInput = command.split(' ')[0] || '';
     const commandArgs = command.split(' ');
@@ -134,5 +136,15 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[], inputRef:
   }
 
 
-  return { commands, prompts, handlePromptSubmit, promptHistory, handleHistory, handleClick, containerRef }
+  return {
+    commands,
+    prompts,
+    handlePromptSubmit,
+    promptHistory,
+    handleHistory,
+    handleClick,
+    containerRef,
+    inputRef,
+    handlePrompt
+  }
 }

@@ -1,4 +1,4 @@
-import { useRef, useEffect, createContext } from "react";
+import { useEffect, createContext } from "react";
 import { PromptInput } from "./PromptInput";
 import { TerminalHeader } from "./TerminalHeader";
 import { PromptHeader } from "./PromptHeader";
@@ -23,14 +23,14 @@ type TerminalProps = {
 export const ThemeContext = createContext<any>(null);
 
 export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const {
     prompts,
     containerRef,
+    inputRef,
     handlePromptSubmit,
     handleHistory,
     handleClick
-  } = useTerminal(terminalCommands, inputRef);
+  } = useTerminal(terminalCommands);
 
 
   useEffect(() => {
