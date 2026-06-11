@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.2](https://github.com/climber-sean/OhMyRsh/compare/v0.1.1...v0.1.2) (2026-06-11)
+
+
+### Features
+
+* add command history ([#9](https://github.com/climber-sean/OhMyRsh/issues/9)) ([636333c](https://github.com/climber-sean/OhMyRsh/commit/636333cbc8db1d3597f5952325b8303f981c93da))
+* added mapping of help commands ([#11](https://github.com/climber-sean/OhMyRsh/issues/11)) ([764583c](https://github.com/climber-sean/OhMyRsh/commit/764583cfd60b8b5acf6b4fd9ba28e4fddd78acd6))
+* terminal theming ([#8](https://github.com/climber-sean/OhMyRsh/issues/8)) ([eb1a66a](https://github.com/climber-sean/OhMyRsh/commit/eb1a66a8f37584657c83978cc77e523c28f7f1d0))
+
 ## 0.1.1 (2026-05-21)
 
 
