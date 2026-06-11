@@ -1,13 +1,15 @@
-.promptHeader {
+.promptHeaderLeft {
   background: white;
-  border-radius: 10px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
   padding: 4px 15px;
   display: inline-block;
   position: relative;
   margin-left: 20px;
+  z-index: 1;
 }
 
-.promptHeader:before {
+.promptHeaderLeft:before {
   content: '';
   width: 15px;
   height: 25px;
@@ -20,4 +22,12 @@
   border-bottom: 1px solid white;
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
+}
+
+.promptHeaderRight {
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  padding: 4px 15px;
+  display: inline-block;
+  transform: translateX(-10px);
 }

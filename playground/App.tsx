@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <h1>Going to build my component package here</h1>
-      <Terminal terminalCommands={terminalCommands} />
+      <Terminal terminalCommands={terminalCommands} theme="dracula" />
     </>
   )
 }

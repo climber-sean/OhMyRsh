@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import type { TerminalOutput } from "../types/terminaloutput.type.ts";
 import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalcommand.type.ts";
 
@@ -25,45 +25,135 @@ import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalco
       }
     }]
 
-
-
-export const useTerminal = (terminalCommands: TerminalCommandConfig[]) => {
+export const useTerminal = (terminalCommands: TerminalCommandConfig[] = []) => {
   const [prompts, setPrompts] = useState<TerminalOutput[]>([]);
+  const [promptHistory, setPromptHistory] = useState<string[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  let commands: Record<string, any> = {};
 
-  const commands: Record<string, any> = useMemo(() =>
+  commands = useMemo(() =>
     [...defaultCommands, ...terminalCommands].reduce((acc, command) => {
       acc[command.name] = {
         helpMessage: command.helpMessage,
         commandFunc: command.commandFunc,
       }
 
-      return acc
-    }, {} as TerminalCommand), [terminalCommands]);
+    return acc
+  }, {} as TerminalCommand), [terminalCommands]);
 
-  const handlePromptSubmit = (command: string) => {
+  let helpPromptMessage: string[] = [];
+
+  [...defaultCommands, ...terminalCommands].forEach((cmd) => {
+    helpPromptMessage.push(`<p>${cmd.name} -      ${cmd.helpMessage}</p>`);
+  });
+
+  commands.help = {
+    helpMessage: 'Display all commands available',
+    commandFunc: () => helpPromptMessage.join(''),
+  }
+ 
+  const handlePrompt = (command: string) => {
     const commandInput = command.split(' ')[0] || '';
     const commandArgs = command.split(' ');
     commandArgs.shift();
 
-    console.log(commandArgs);
-    
     const output: TerminalOutput = {
       command: '',
     }
+
     if (commands[commandInput]) {
-      setPrompts((prev) => [...prev, output]);
-      const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, setPrompts);
-      if (returnedOutput) {
-        output.output = returnedOutput
+      let selfSetsPrompts = false
+
+      const selfSetPrompts = (val: TerminalOutput[]) => {
+        selfSetsPrompts = true;
+        setPrompts(val);
       }
-      output.command = command;
+
+      const returnedOutput = commands[commandInput].commandFunc(commandInput, commandArgs, selfSetPrompts);
+
+      if (!selfSetsPrompts) {
+        if (returnedOutput) {
+          output.output = returnedOutput;
+        }
+        output.command = command;
+        setPrompts((prev) => [...prev, output]);
+      }
+
+      setPromptHistory((prev) => [...prev, command])
     } else {
       output.command = command;
       output.output = `rsh: command not found: ${commandInput}`;
-      setPrompts((prev) => [...prev, output])
+      setPrompts((prev) => [...prev, output]);
+      setPromptHistory((prev) => [...prev, command])
     }
-
   }
 
-  return { commands, prompts, handlePromptSubmit }
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleClick = () => {
+    inputRef.current?.focus();
+  }
+
+  const handlePromptSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputRef.current && containerRef.current) {
+      handlePrompt(inputRef.current.value);
+      currentHistoryPosition.current = null;
+      inputRef.current.value = '';
+      requestAnimationFrame(() => {
+        if (containerRef.current) containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      })
+    }
+  }
+
+  const currentHistoryPosition = useRef<number | null>(null);
+
+  const handleHistory = (e: KeyboardEvent) => {
+    if (e.key === "ArrowUp" && promptHistory.length) {
+      e.preventDefault();
+      if (currentHistoryPosition.current === null) {
+        currentHistoryPosition.current = promptHistory.length;
+      } else {
+        currentHistoryPosition.current = Math.max(0, currentHistoryPosition.current - 1);
+      }
+
+      if (inputRef.current) {
+        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
+        const length = inputRef.current.value.length;
+        inputRef.current.selectionStart = length;
+        inputRef.current.selectionEnd = length;
+      }
+    } else if (e.key === "ArrowDown" && promptHistory.length) {
+      e.preventDefault();
+      if (currentHistoryPosition.current === null) return;
+
+      currentHistoryPosition.current = currentHistoryPosition.current + 1;
+
+      if (currentHistoryPosition.current > promptHistory.length) {
+        currentHistoryPosition.current = null;
+        if (inputRef.current) inputRef.current.value = '';
+        return;
+      }
+
+      if (inputRef.current) {
+        inputRef.current.value = promptHistory[currentHistoryPosition.current - 1] ?? '';
+        const length = inputRef.current.value.length;
+        inputRef.current.selectionStart = length;
+        inputRef.current.selectionEnd = length;
+      }
+    }
+  }
+
+
+  return {
+    commands,
+    prompts,
+    handlePromptSubmit,
+    promptHistory,
+    handleHistory,
+    handleClick,
+    containerRef,
+    inputRef,
+    handlePrompt
+  }
 }

@@ -1,10 +1,13 @@
-import { useRef, useEffect } from "react";
-import styles from "../styles/window.module.css";
+import { useEffect, createContext } from "react";
 import { PromptInput } from "./PromptInput";
 import { TerminalHeader } from "./TerminalHeader";
 import { PromptHeader } from "./PromptHeader";
 import { useTerminal } from "../hooks/useTerminal";
+import { themes } from "../themes/index";
 import type { TerminalCommandConfig } from "../types/terminalcommand.type.ts";
+import type { TerminalTheme } from "../types/terminaltheme.type.ts";
+import styles from "../styles/window.module.css";
+import "@fontsource/noto-mono";
 
 type TerminalOutput = {
   output?: string,
@@ -12,53 +15,56 @@ type TerminalOutput = {
 }
 
 type TerminalProps = {
-  terminalCommands: TerminalCommandConfig[]
+  terminalCommands: TerminalCommandConfig[],
+  theme: 'catppuccin' | 'dracula' | TerminalTheme,
 }
 
-export const Terminal = ({ terminalCommands }: TerminalProps) => {
-  const { prompts, handlePromptSubmit: promptSubmit } = useTerminal(terminalCommands);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+//TODO: move theme context out of component
+export const ThemeContext = createContext<any>(null);
 
-  const handleClick = () => {
-    inputRef.current?.focus();
-  };
+export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
+  const {
+    prompts,
+    containerRef,
+    inputRef,
+    handlePromptSubmit,
+    handleHistory,
+    handleClick
+  } = useTerminal(terminalCommands);
 
-  const handlePromptSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (inputRef.current) {
-      promptSubmit(inputRef.current.value)
-    }
-  }
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.value = '';
+    const handleKeyDown = (e: KeyboardEvent) => {
+      handleHistory(e);
     }
 
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
-  }, [prompts])
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [prompts, handleHistory])
 
   return (
-    <div className={styles.window} onClick={handleClick} >
+    <ThemeContext value={{
+      theme: typeof theme === 'string' ? themes[theme] : theme
+    }}>
+    <div className={styles.window} style={{ fontFamily: 'Noto Mono', fontSize: '14px' }} onClick={handleClick} >
       <TerminalHeader />
-      <div ref={containerRef} className={styles.promptContainer}>
+      <div ref={containerRef} className={styles.promptContainer} style={{ background: themes.dracula.terminalBackground, height: '100%' }}>
         {prompts.map((value: TerminalOutput, i: number) => (
           <div key={i}>
             <PromptHeader />
-            <div style={{ color: 'white', padding: '0 0 10px', marginLeft: '30px' }}>{value.command}</div>
+            <div style={{ color: themes.catppuccin.promptText, padding: '0 0 10px', marginLeft: '30px', marginTop: '3px' }}>{value.command}</div>
             {value.output && (
-              <div style={{ color: 'white' }}>{value.output}</div> 
+              <div style={{ color: themes.dracula.promptText, marginBottom: '5px' }} dangerouslySetInnerHTML={{ __html: value.output }} />
             )}
           </div>
         ))}
         <div>
           <PromptHeader />
-          <PromptInput ref={inputRef} onPromptSubmit={handlePromptSubmit} />
+          <PromptInput ref={inputRef} onPromptSubmit={handlePromptSubmit} value={inputRef.current?.value || ''} />
         </div>
       </div>
     </div>
+    </ThemeContext>
   )
 }
