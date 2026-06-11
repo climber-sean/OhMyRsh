@@ -25,8 +25,6 @@ import type { TerminalCommand, TerminalCommandConfig } from "../types/terminalco
       }
     }]
 
-
-
 export const useTerminal = (terminalCommands: TerminalCommandConfig[] = []) => {
   const [prompts, setPrompts] = useState<TerminalOutput[]>([]);
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
@@ -41,7 +39,18 @@ export const useTerminal = (terminalCommands: TerminalCommandConfig[] = []) => {
       }
 
     return acc
-  }, {} as TerminalCommand), [terminalCommands])
+  }, {} as TerminalCommand), [terminalCommands]);
+
+  let helpPromptMessage: string[] = [];
+
+  [...defaultCommands, ...terminalCommands].forEach((cmd) => {
+    helpPromptMessage.push(`<p>${cmd.name} -      ${cmd.helpMessage}</p>`);
+  });
+
+  commands.help = {
+    helpMessage: 'Display all commands available',
+    commandFunc: () => helpPromptMessage.join(''),
+  }
  
   const handlePrompt = (command: string) => {
     const commandInput = command.split(' ')[0] || '';
