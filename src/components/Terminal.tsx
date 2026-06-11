@@ -55,7 +55,7 @@ export const Terminal = ({ terminalCommands, theme }: TerminalProps) => {
             <PromptHeader />
             <div style={{ color: themes.catppuccin.promptText, padding: '0 0 10px', marginLeft: '30px', marginTop: '3px' }}>{value.command}</div>
             {value.output && (
-              <div style={{ color: themes.dracula.promptText, marginBottom: '5px' }}>{value.output}</div> 
+              <div style={{ color: themes.dracula.promptText, marginBottom: '5px' }} dangerouslySetInnerHTML={{ __html: value.output }} />
             )}
           </div>
         ))}
