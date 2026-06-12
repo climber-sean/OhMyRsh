@@ -1,6 +1,6 @@
 {
   "name": "ohmyrsh",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "OhMyRsh - A terminal component for react",
   "author": "climber-sean <Sean Butlin>",
   "license": "MIT",
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build --config vite.lib.config.ts",
+    "build": "vite build --config vite.lib.config.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "release": "commit-and-tag-version",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@microsoft/api-extractor": "^7.58.8",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -55,6 +56,6 @@
   },
   "dependencies": {
     "@fontsource/noto-mono": "^5.2.5",
-    "ohmyrsh": "^0.1.3"
+    "ohmyrsh": "^0.1.4"
   }
 }
