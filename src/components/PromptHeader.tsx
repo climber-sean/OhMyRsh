@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import styles from "../styles/promptheader.module.css";
-import { ThemeContext } from "./Terminal.tsx";
-import { TerminalIcon } from "./TerminalIcon.tsx";
+import { ThemeContext } from "./Terminal";
+import { TerminalIcon } from "./TerminalIcon";
 
 
 export const PromptHeader = () => {
