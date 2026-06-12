@@ -1,6 +1,6 @@
 {
   "name": "ohmyrsh-terminal",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "OhMyRsh - A terminal component for react",
   "author": "climber-sean <Sean Butlin>",
   "license": "MIT",
@@ -16,7 +16,8 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./styles": "./dist/ohmyrsh-terminal.css"
   },
   "publishConfig": {
     "access": "public"
