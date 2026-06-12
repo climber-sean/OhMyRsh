@@ -28,7 +28,7 @@ A customisable terminal emulator component for React. Embed a fully interactive 
 ## Installation
 
 ```bash
-npm install ohmyrsh
+npm install ohmyrsh-terminal
 ```
 
 OhMyRsh requires React 18 or later as a peer dependency.
@@ -42,8 +42,8 @@ npm install react react-dom
 ## Quick Start
 
 ```tsx
-import { OhMyRshTerminal } from 'ohmyrsh';
-import type { TerminalCommandConfig } from 'ohmyrsh';
+import { OhMyRshTerminal } from 'ohmyrsh-terminal';
+import type { TerminalCommandConfig } from 'ohmyrsh-terminal';
 import 'ohmyrsh-terminal/styles';
 
 const commands: TerminalCommandConfig[] = [
@@ -93,7 +93,7 @@ Two built-in themes are available:
 Pass a `TerminalTheme` object to fully control the colour scheme:
 
 ```tsx
-import type { TerminalTheme } from 'ohmyrsh';
+import type { TerminalTheme } from 'ohmyrsh-terminal';
 
 const myTheme: TerminalTheme = {
   terminalBackground: '#0d1117',
@@ -123,7 +123,7 @@ const myTheme: TerminalTheme = {
 If you need lower-level control — for example to build a fully custom terminal UI — you can use the `useTerminal` hook directly.
 
 ```tsx
-import { useTerminal } from 'ohmyrsh';
+import { useTerminal } from 'ohmyrsh-terminal';
 
 const { prompts, inputRef, containerRef, handlePromptSubmit, handleHistory, handleClick } =
   useTerminal(terminalCommands);
@@ -147,8 +147,8 @@ const { prompts, inputRef, containerRef, handlePromptSubmit, handleHistory, hand
 
 ```tsx
 import { useEffect } from 'react';
-import { useTerminal } from 'ohmyrsh';
-import type { TerminalCommandConfig } from 'ohmyrsh';
+import { useTerminal } from 'ohmyrsh-terminal';
+import type { TerminalCommandConfig } from 'ohmyrsh-terminal';
 
 const commands: TerminalCommandConfig[] = [
   {
@@ -285,7 +285,7 @@ echo -       The echo command allows you to print text to the terminal screen
 OhMyRsh is written in TypeScript. All types are exported from the package entry point:
 
 ```ts
-import type { TerminalCommandConfig, TerminalTheme } from 'ohmyrsh';
+import type { TerminalCommandConfig, TerminalTheme } from 'ohmyrsh-terminal';
 ```
 
 | Type                    | Description                                       |
