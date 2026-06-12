@@ -44,6 +44,7 @@ npm install react react-dom
 ```tsx
 import { OhMyRshTerminal } from 'ohmyrsh';
 import type { TerminalCommandConfig } from 'ohmyrsh';
+import 'ohmyrsh-terminal/styles';
 
 const commands: TerminalCommandConfig[] = [
   {

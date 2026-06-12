@@ -16,7 +16,8 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./styles": "./dist/ohmyrsh-terminal.css"
   },
   "publishConfig": {
     "access": "public"
