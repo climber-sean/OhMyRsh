@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import dts from 'vite-plugin-dts';
+import dts from 'unplugin-dts/vite';
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [react(), dts({ include: ["./src"], tsconfigPath: "./tsconfig.app.json"})],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
@@ -18,5 +17,7 @@ export default defineConfig({
         globals: { react: 'React', 'react-dom': 'ReactDOM' },
       },
     },
+    emptyOutDir: true,
   },
+  plugins: [react(), dts({ include: ['./src'], tsconfigPath: "./tsconfig.app.json", outDirs: './dist', bundleTypes: true })],
 })
